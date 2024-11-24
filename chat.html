@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدردشة العامة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        #chatInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>الدردشة العامة</h1>
+    <div id="messages"></div>
+    <textarea id="chatInput" placeholder="اكتب رسالتك هنا..."></textarea><br>
+    <button id="sendBtn">إرسال</button>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnHSUo_Vu53NidFWYlQ74_CyOyfVW_BqQ",
+            authDomain: "alaah-8d503.firebaseapp.com",
+            databaseURL: "https://alaah-8d503-default-rtdb.firebaseio.com",
+            projectId: "alaah-8d503",
+            storageBucket: "alaah-8d503.firebasestorage.app",
+            messagingSenderId: "365922482892",
+            appId: "1:365922482892:web:a843fbb3594d200c67e069",
+            measurementId: "G-D4TPJW4RT8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // الحصول على اسم المستخدم المخزن في Local Storage
+        const username = localStorage.getItem("username");
+
+        // إرسال الرسالة
+        document.getElementById('sendBtn').addEventListener('click', function() {
+            const message = document.getElementById('chatInput').value;
+            if (message.trim() !== "") {
+                const messagesRef = ref(database, 'messages');
+                const newMessageRef = push(messagesRef);
+                set(newMessageRef, {
+                    username: username,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                });
+                document.getElementById('chatInput').value = ""; // مسح الإدخال بعد الإرسال
+            }
+        });
+
+        // قراءة الرسائل
+        const messagesRef = ref(database, 'messages');
+        onChildAdded(messagesRef, function(snapshot) {
+            const messageData = snapshot.val();
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `<strong>${messageData.username}:</strong> ${messageData.message}`;
+            document.getElementById('messages').appendChild(messageElement);
+        });
+    </script>
+
+</body></html>

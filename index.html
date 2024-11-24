@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدخول إلى الدردشة</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            color: red;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>مرحباً بك في الدردشة العامة!</h1>
+    <p>من فضلك أدخل بياناتك للمتابعة:</p>
+    <input type="password" id="passwordInput" placeholder="أدخل كلمة السر هنا"><br>
+    <input type="text" id="nameInput" placeholder="أدخل اسمك هنا"><br>
+    <button id="loginBtn">دخول</button>
+    <p id="errorMessage" style="display: none;">كلمة السر غير صحيحة. حاول مرة أخرى.</p>
+
+    <script>
+        // كلمة السر الصحيحة
+        const correctPassword = "81102843";
+
+        // عند النقر على زر الدخول
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const enteredPassword = document.getElementById('passwordInput').value;
+            const enteredName = document.getElementById('nameInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // التحقق من كلمة السر والاسم
+            if (enteredPassword === correctPassword && enteredName.trim() !== "") {
+                // تخزين الاسم في Local Storage
+                localStorage.setItem("username", enteredName.trim());
+                // الانتقال إلى صفحة الدردشة
+                window.location.href = "chat.html";
+            } else if (enteredName.trim() === "") {
+                errorMessage.textContent = "من فضلك أدخل اسمك.";
+                errorMessage.style.display = "block";
+            } else {
+                errorMessage.textContent = "كلمة السر غير صحيحة. حاول مرة أخرى.";
+                errorMessage.style.display = "block";
+            }
+        });
+    </script>
+
+</body></html>
